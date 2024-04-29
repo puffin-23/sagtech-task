@@ -29,7 +29,10 @@ export class UserService {
       return this.prismaService.user.findFirst({where:{ id }})
    }
 
-   getAll() {}
+   getAllUsers(): Promise<User[]> {
+      const users = this.prismaService.user.findMany()
+      return users
+   }
 
    deleteUser(id: string, user: JwtPayload) {
       if (user.id !== id && user.roles.includes(Role.ADMIN)) {

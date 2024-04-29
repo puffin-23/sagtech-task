@@ -1,45 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Post, Prisma } from '@prisma/client';
+import { Post, Prisma, User } from '@prisma/client';
+import { ForbiddenException } from '@nestjs/common';
+import { JwtPayload } from '@auth/interface';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class PostService {
-   constructor(private prisma: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
+  createNewPost(post: Partial<Post>, user?: Partial<User>) {
+     if (user.id !== user.id) {
+        throw new ForbiddenException()
+     }
+     return this.prismaService.post.create({
+        data: {
+           title: post.title,
+           content: post.content,
+           userId: user.id,
+        }
+     })
+  }
+  getPost(id: string) {
+    return this.prismaService.post.findFirst({where:{ id }})
+ }
 
-   async getPost(
-      postWhereUniqueInput: Prisma.PostWhereUniqueInput,
-    ): Promise<Post | null> {
-      return this.prisma.post.findUnique({
-        where: postWhereUniqueInput,
-      });
+  deletePost(id: string, user: JwtPayload) {
+    if (user.id !== id && user.roles.includes(Role.ADMIN)) {
+      throw new ForbiddenException()
     }
-  
-    async getAllPosts(): Promise<Post[]> {
-      const posts = await this.prisma.post.findMany()
+    return this.prismaService.user.delete({where: { id }, select: {id: true}})
+  }
+  getAllPosts(): Promise<Post[]> {
+    const posts = this.prismaService.post.findMany()
       return posts
     }
-  
-    async createPost(data: Prisma.PostCreateInput): Promise<Post> {
-      return this.prisma.post.create({
-        data,
-      });
-    }
-  
-    async updatePost(params: {
-      where: Prisma.PostWhereUniqueInput;
-      data: Prisma.PostUpdateInput;
-    }): Promise<Post> {
-      const { data, where } = params;
-      return this.prisma.post.update({
-        data,
-        where,
-      });
-    }
-  
-    async deletePost(where: Prisma.PostWhereUniqueInput): Promise<Post> {
-      return this.prisma.post.delete({
-        where,
-      });
-    }
-}
+  }
+
 
