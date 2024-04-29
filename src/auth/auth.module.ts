@@ -7,10 +7,11 @@ import { UserModule } from 'src/user/user.module';
 import { options } from './config/jwt-module-async-options';
 import { STRATEGIES } from './strategies';
 import { GUARDS } from './guards';
+import { PrismaService } from 'src/prisma.service';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, ...STRATEGIES, ...GUARDS],
-  imports: [PassportModule, JwtModule.registerAsync(options()), UserModule]
+  providers: [AuthService, ...STRATEGIES, ...GUARDS, PrismaService],
+  imports: [PassportModule, JwtModule.registerAsync(options()), UserModule, ]
 })
 export class AuthModule {}

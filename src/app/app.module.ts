@@ -6,9 +6,11 @@ import { ConfigModule } from '@nestjs/config';
 import config from '../config'
 import { JwtAuthGuard } from '@auth/guards/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { PostModule } from 'src/post/post.module';
+import { AuthModule } from '@auth/auth.module';
 
 @Module({
-  imports: [UserModule, ConfigModule.forRoot({
+  imports: [UserModule, PostModule, AuthModule, ConfigModule.forRoot({
     isGlobal: true,
     load: [config]
   })],

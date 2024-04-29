@@ -5,7 +5,6 @@ import { Tokens } from './interface';
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma.service';
-import { JwtPayload } from './interface';
 
 @Injectable()
 export class AuthService {

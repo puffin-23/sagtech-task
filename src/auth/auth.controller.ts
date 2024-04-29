@@ -1,4 +1,4 @@
-import { BadRequestException, ClassSerializerInterceptor, Controller, Post, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Post, UseInterceptors } from '@nestjs/common';
 import { LoginDto, RegisterDto } from './dto';
 import { AuthService } from './auth.service';
 import { Public } from '@app/common/decorators';
