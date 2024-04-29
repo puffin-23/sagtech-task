@@ -2,6 +2,8 @@ import { IsPasswordsMatchingConstraint } from "@app/common/decorators/is-passwor
 import { IsEmail, IsString, MinLength, Validate } from "class-validator";
 
 export class RegisterDto {
+   @IsString()
+   id: string
    @IsEmail()
    email: string;
    @IsString()

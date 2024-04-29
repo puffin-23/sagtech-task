@@ -5,6 +5,7 @@ import { Tokens } from './interface';
 import { compareSync } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma.service';
+import { JwtPayload } from './interface';
 
 @Injectable()
 export class AuthService {
@@ -13,11 +14,11 @@ export class AuthService {
       private readonly jwtservice: JwtService,
       private readonly prismaService: PrismaService) {}
    async register(dto: RegisterDto) {
-      const user = await this.userService.getUser(dto.email).catch((err) => {
+      const _user = await this.userService.getUser(dto.email).catch((err) => {
          this.logger.error(err)
          return null
       })
-      if (user) {
+      if (_user) {
          throw new ConflictException(`пользователь с таким email уже зарегистрирован`)
       }
       return this.userService.createNewUser(dto).catch(err => {

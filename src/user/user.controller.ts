@@ -5,6 +5,7 @@ import { UserResponse } from './response';
 import { CurrentUser } from '@app/common/decorators';
 import { JwtPayload } from '@auth/interface';
 import { User } from '@prisma/client';
+import { identity } from 'rxjs';
 
 @Controller()
 export class UserController {
@@ -15,9 +16,9 @@ export class UserController {
 
    @UseInterceptors(ClassSerializerInterceptor)
    @Get('users/:id')
-   async getUser(@Param('id') userId: string) {
-      const user = await this.userService.getUser(userId)
-      return new UserResponse(user)
+   async getUser(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: JwtPayload) {
+      const _user = await this.userService.getUser(id, user)
+      return new UserResponse(_user)
    }
 
    @Put('users/:id')
